@@ -20,12 +20,10 @@ enum class Landing { None, Snake, Ladder, Overshoot };
 class Dice {
     std::mt19937 rng;
     std::uniform_int_distribution<int> dist;
-    int lastValue;
 
 public:
-    Dice() : rng(std::random_device{}()), dist(1, 6), lastValue(1) {}
-    int roll() { return lastValue = dist(rng); }
-    int last() const { return lastValue; }
+    Dice() : rng(std::random_device{}()), dist(1, 6) {}
+    int roll() { return dist(rng); }
 };
 
 // --------------------------------- Question ---------------------------------
@@ -87,8 +85,6 @@ public:
         return !questions.empty();
     }
 
-    bool isLoaded() const { return !questions.empty(); }
-
     // random unused question of this standard (nullptr if none exist)
     const Question* pick(int standard) {
         std::vector<int> list;
@@ -149,7 +145,6 @@ public:
     }
     virtual ~BoardElement() = default;
     virtual ElementType type() const = 0;
-    virtual std::string describe() const = 0;
     int getStart() const { return start; }
     int getEnd() const { return end; }
 };
@@ -160,7 +155,6 @@ public:
         if (head <= tail) throw std::invalid_argument("Snake head must be above its tail");
     }
     ElementType type() const override { return ElementType::Snake; }
-    std::string describe() const override { return "Snake"; }
 };
 
 class Ladder : public BoardElement {
@@ -169,7 +163,6 @@ public:
         if (bottom >= top) throw std::invalid_argument("Ladder top must be above its bottom");
     }
     ElementType type() const override { return ElementType::Ladder; }
-    std::string describe() const override { return "Ladder"; }
 };
 
 // ---------------------------------- Board ----------------------------------
@@ -244,7 +237,6 @@ public:
 
     // ---- quiz related ----
     bool loadQuestions(const std::string& filename) { return bank.loadFromFile(filename); }
-    bool hasQuestions() const { return bank.isLoaded(); }
 
     void setPlayerInfo(int i, const std::string& name, int standard) {
         players[i].setName(name);
@@ -313,7 +305,6 @@ public:
 
     const Board& getBoard() const { return board; }
     const std::vector<Player>& getPlayers() const { return players; }
-    const Player& getCurrentPlayer() const { return players[current]; }
     int getCurrentIndex() const { return current; }
     int getWinner() const { return winner; }
     bool isOver() const { return winner != -1; }
