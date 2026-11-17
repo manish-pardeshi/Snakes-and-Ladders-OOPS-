@@ -3,4 +3,4 @@ This C++ Snakes and Ladders game demonstrates OOP concepts: classes, objects, in
 
 ## System Architecture
 
-![System Architecture](System%20Architecture.png)
+![System Architecture](./system-architecture.png)
